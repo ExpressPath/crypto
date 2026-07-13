@@ -58,19 +58,22 @@
   </style>
 </head>
 <body>
-  <iframe class="frame" src="https://toe-customers-poet-currencies.trycloudflare.com/?public=github" title="CTM Public Monitor"></iframe>
+  <iframe id="ctm-frame" class="frame" src="https://toe-customers-poet-currencies.trycloudflare.com/?public=github" title="CTM Public Monitor"></iframe>
   <div class="fallback">
-    <span>Updated 2026-07-13T03:35:06Z / https://toe-customers-poet-currencies.trycloudflare.com</span>
+    <span>Updated 2026-07-13T03:37:06Z / secure GitHub funding access</span>
     <a href="https://toe-customers-poet-currencies.trycloudflare.com/?public=github">Open</a>
   </div>
   <script>
     window.CTM_MONITOR = {
       dashboardUrl: "https://toe-customers-poet-currencies.trycloudflare.com/?public=github",
       baseUrl: "https://toe-customers-poet-currencies.trycloudflare.com",
-      generatedAt: "2026-07-13T03:35:06Z",
+      generatedAt: "2026-07-13T03:37:06Z",
       stableUrl: "https://expresspath.github.io/crypto/",
-      authMode: "public-referrer-viewer"
+      authMode: "public-viewer+scoped-funding-token"
     };
+    if (new URLSearchParams(window.location.search).get("funding") === "1") {
+      document.querySelector("#ctm-frame").src = window.CTM_MONITOR.dashboardUrl + "#funding";
+    }
   </script>
 </body>
 </html>
