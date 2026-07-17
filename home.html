@@ -60,19 +60,28 @@
 <body>
   <iframe id="ctm-frame" class="frame" src="https://-best-surname-meetings.trycloudflare.com/?public=github" title="CTM Public Monitor"></iframe>
   <div class="fallback">
-    <span>Updated 2026-07-17T01:47:28Z / GitHub funding access</span>
+    <span>Updated 2026-07-17T09:59:11Z / GitHub miner + funding access</span>
     <a href="https://-best-surname-meetings.trycloudflare.com/?public=github">Open</a>
   </div>
   <script>
     window.CTM_MONITOR = {
       dashboardUrl: "https://-best-surname-meetings.trycloudflare.com/?public=github",
       baseUrl: "https://-best-surname-meetings.trycloudflare.com",
-      generatedAt: "2026-07-17T01:47:28Z",
+      generatedAt: "2026-07-17T09:59:11Z",
       stableUrl: "https://expresspath.github.io/crypto/",
-      authMode: "public-viewer+tokenless-funding"
+      authMode: "public-viewer+tokenless-funding",
+      tabForwarding: "v1"
     };
-    if (new URLSearchParams(window.location.search).get("funding") === "1") {
-      document.querySelector("#ctm-frame").src = window.CTM_MONITOR.dashboardUrl + "#funding";
+    const params = new URLSearchParams(window.location.search);
+    const requestedTab = params.get("funding") === "1"
+      ? "funding"
+      : params.get("miner") === "1"
+        ? "miner"
+        : params.get("tab") || window.location.hash.slice(1);
+    if (["miner", "funding"].includes(requestedTab)) {
+      const targetUrl = window.CTM_MONITOR.dashboardUrl + "#" + requestedTab;
+      document.querySelector("#ctm-frame").src = targetUrl;
+      document.querySelector(".fallback a").href = targetUrl;
     }
   </script>
 </body>
