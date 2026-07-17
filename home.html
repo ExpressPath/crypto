@@ -55,22 +55,76 @@
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .live-status {
+      position: fixed;
+      inset: max(12px, env(safe-area-inset-top)) 12px auto auto;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 2px 9px;
+      align-items: center;
+      max-width: min(390px, calc(100vw - 24px));
+      padding: 9px 12px;
+      border: 1px solid rgba(251, 191, 36, 0.65);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.94);
+      color: #fbbf24;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(10px);
+      pointer-events: none;
+    }
+    .live-status.live {
+      border-color: rgba(74, 222, 128, 0.72);
+      color: #4ade80;
+    }
+    .live-status.offline {
+      border-color: rgba(251, 113, 133, 0.8);
+      color: #fb7185;
+    }
+    .live-status .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: currentColor;
+      box-shadow: 0 0 12px currentColor;
+    }
+    .live-status .detail {
+      grid-column: 1 / -1;
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    @media (max-width: 520px) {
+      .live-status {
+        inset: max(8px, env(safe-area-inset-top)) 8px auto 8px;
+        max-width: none;
+      }
+      .fallback { inset-inline: 8px; }
+    }
   </style>
 </head>
 <body>
   <iframe id="ctm-frame" class="frame" src="https://-best-surname-meetings.trycloudflare.com/?public=github" title="CTM Public Monitor"></iframe>
+  <div id="live-status" class="live-status checking" role="status" aria-live="polite">
+    <span class="dot" aria-hidden="true"></span>
+    <span id="live-status-label">CHECKING ﾂｷ 謗･邯夂｢ｺ隱堺ｸｭ</span>
+    <span id="live-status-detail" class="detail">繝ｪ繧｢繝ｫ繧ｿ繧､繝謗･邯壹ｒ遒ｺ隱阪＠縺ｦ縺・∪縺・/span>
+  </div>
   <div class="fallback">
-    <span>Updated 2026-07-17T09:59:11Z / GitHub miner + funding access</span>
+    <span>Updated 2026-07-17T10:17:11Z / GitHub miner + funding access</span>
     <a href="https://-best-surname-meetings.trycloudflare.com/?public=github">Open</a>
   </div>
   <script>
     window.CTM_MONITOR = {
       dashboardUrl: "https://-best-surname-meetings.trycloudflare.com/?public=github",
       baseUrl: "https://-best-surname-meetings.trycloudflare.com",
-      generatedAt: "2026-07-17T09:59:11Z",
+      generatedAt: "2026-07-17T10:17:11Z",
       stableUrl: "https://expresspath.github.io/crypto/",
       authMode: "public-viewer+tokenless-funding",
-      tabForwarding: "v1"
+      tabForwarding: "v1",
+      realtimeIndicator: "v1"
     };
     const params = new URLSearchParams(window.location.search);
     const requestedTab = params.get("funding") === "1"
@@ -83,6 +137,59 @@
       document.querySelector("#ctm-frame").src = targetUrl;
       document.querySelector(".fallback a").href = targetUrl;
     }
+
+    const liveStatus = document.querySelector("#live-status");
+    const liveStatusLabel = document.querySelector("#live-status-label");
+    const liveStatusDetail = document.querySelector("#live-status-detail");
+    let healthRequest = null;
+
+    function healthClock() {
+      return new Date().toLocaleTimeString("ja-JP", { hour12: false });
+    }
+
+    function showRealtimeState(isLive) {
+      liveStatus.classList.toggle("live", isLive);
+      liveStatus.classList.toggle("offline", !isLive);
+      liveStatus.classList.remove("checking");
+      if (isLive) {
+        liveStatusLabel.textContent = "LIVE ﾂｷ 繝ｪ繧｢繝ｫ繧ｿ繧､繝";
+        liveStatusDetail.textContent = "迴ｾ蝨ｨ縺ｮ遞ｼ蜒肴ュ蝣ｱ縺ｧ縺・ﾂｷ 謗･邯夂｢ｺ隱・" + healthClock();
+      } else {
+        liveStatusLabel.textContent = "NOT LIVE ﾂｷ 繝ｪ繧｢繝ｫ繧ｿ繧､繝諠・ｱ縺ｧ縺ｯ縺ゅｊ縺ｾ縺帙ｓ";
+        liveStatusDetail.textContent = "PC縺ｾ縺溘・Cloudflare繝医Φ繝阪Ν縺ｫ謗･邯壹〒縺阪∪縺帙ｓ ﾂｷ 遒ｺ隱・" + healthClock();
+      }
+    }
+
+    async function checkRealtime() {
+      if (healthRequest) return healthRequest;
+      healthRequest = (async () => {
+        const controller = new AbortController();
+        const timeout = window.setTimeout(() => controller.abort(), 8000);
+        try {
+          const response = await fetch(
+            window.CTM_MONITOR.baseUrl + "/api/health?_r=" + Date.now(),
+            { cache: "no-store", mode: "cors", signal: controller.signal }
+          );
+          const health = response.ok ? await response.json() : null;
+          showRealtimeState(Boolean(health && health.ok && health.realtime));
+        } catch {
+          showRealtimeState(false);
+        } finally {
+          window.clearTimeout(timeout);
+        }
+      })();
+      try {
+        await healthRequest;
+      } finally {
+        healthRequest = null;
+      }
+    }
+
+    checkRealtime();
+    window.setInterval(checkRealtime, 15000);
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) checkRealtime();
+    });
   </script>
 </body>
 </html>
