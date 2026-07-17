@@ -109,22 +109,22 @@
   <iframe id="ctm-frame" class="frame" src="https://-best-surname-meetings.trycloudflare.com/?public=github" title="CTM Public Monitor"></iframe>
   <div id="live-status" class="live-status checking" role="status" aria-live="polite">
     <span class="dot" aria-hidden="true"></span>
-    <span id="live-status-label">CHECKING ﾂｷ 謗･邯夂｢ｺ隱堺ｸｭ</span>
-    <span id="live-status-detail" class="detail">繝ｪ繧｢繝ｫ繧ｿ繧､繝謗･邯壹ｒ遒ｺ隱阪＠縺ｦ縺・∪縺・/span>
+    <span id="live-status-label">CHECKING &middot; &#25509;&#32154;&#30906;&#35469;&#20013;</span>
+    <span id="live-status-detail" class="detail">&#12522;&#12450;&#12523;&#12479;&#12452;&#12512;&#25509;&#32154;&#12434;&#30906;&#35469;&#12375;&#12390;&#12356;&#12414;&#12377;</span>
   </div>
   <div class="fallback">
-    <span>Updated 2026-07-17T10:17:11Z / GitHub miner + funding access</span>
+    <span>Updated 2026-07-17T10:19:02Z / GitHub miner + funding access</span>
     <a href="https://-best-surname-meetings.trycloudflare.com/?public=github">Open</a>
   </div>
   <script>
     window.CTM_MONITOR = {
       dashboardUrl: "https://-best-surname-meetings.trycloudflare.com/?public=github",
       baseUrl: "https://-best-surname-meetings.trycloudflare.com",
-      generatedAt: "2026-07-17T10:17:11Z",
+      generatedAt: "2026-07-17T10:19:02Z",
       stableUrl: "https://expresspath.github.io/crypto/",
       authMode: "public-viewer+tokenless-funding",
       tabForwarding: "v1",
-      realtimeIndicator: "v1"
+      realtimeIndicator: "v2"
     };
     const params = new URLSearchParams(window.location.search);
     const requestedTab = params.get("funding") === "1"
@@ -152,11 +152,11 @@
       liveStatus.classList.toggle("offline", !isLive);
       liveStatus.classList.remove("checking");
       if (isLive) {
-        liveStatusLabel.textContent = "LIVE ﾂｷ 繝ｪ繧｢繝ｫ繧ｿ繧､繝";
-        liveStatusDetail.textContent = "迴ｾ蝨ｨ縺ｮ遞ｼ蜒肴ュ蝣ｱ縺ｧ縺・ﾂｷ 謗･邯夂｢ｺ隱・" + healthClock();
+        liveStatusLabel.textContent = "LIVE \u00B7 \u30EA\u30A2\u30EB\u30BF\u30A4\u30E0";
+        liveStatusDetail.textContent = "\u73FE\u5728\u306E\u7A3C\u50CD\u60C5\u5831\u3067\u3059 \u00B7 \u63A5\u7D9A\u78BA\u8A8D " + healthClock();
       } else {
-        liveStatusLabel.textContent = "NOT LIVE ﾂｷ 繝ｪ繧｢繝ｫ繧ｿ繧､繝諠・ｱ縺ｧ縺ｯ縺ゅｊ縺ｾ縺帙ｓ";
-        liveStatusDetail.textContent = "PC縺ｾ縺溘・Cloudflare繝医Φ繝阪Ν縺ｫ謗･邯壹〒縺阪∪縺帙ｓ ﾂｷ 遒ｺ隱・" + healthClock();
+        liveStatusLabel.textContent = "NOT LIVE \u00B7 \u30EA\u30A2\u30EB\u30BF\u30A4\u30E0\u60C5\u5831\u3067\u306F\u3042\u308A\u307E\u305B\u3093";
+        liveStatusDetail.textContent = "PC\u307E\u305F\u306FCloudflare\u30C8\u30F3\u30CD\u30EB\u306B\u63A5\u7D9A\u3067\u304D\u307E\u305B\u3093 \u00B7 \u78BA\u8A8D " + healthClock();
       }
     }
 
