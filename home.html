@@ -13,9 +13,9 @@
   <style>
     :root {
       color-scheme: dark;
-      background: #0b1020;
-      color: #e5e7eb;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #080a0d;
+      color: #f3f5f7;
+      font-family: "Segoe UI Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     * { box-sizing: border-box; }
     html, body {
@@ -23,34 +23,50 @@
       height: 100%;
       margin: 0;
       overflow: hidden;
-      background: #0b1020;
+      background: #080a0d;
+    }
+    body {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+    .gateway-bar {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      min-height: 42px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 7px max(12px, env(safe-area-inset-right)) 7px max(12px, env(safe-area-inset-left));
+      border-top: 2px solid #2ed398;
+      border-bottom: 1px solid #272d35;
+      background: #101318;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
     }
     .frame {
-      width: 100vw;
-      height: 100dvh;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
       border: 0;
       display: block;
-      background: #0b1020;
+      background: #080a0d;
     }
     .fallback {
-      position: fixed;
-      inset: auto 12px max(12px, env(safe-area-inset-bottom)) 12px;
-      z-index: 2;
       display: flex;
       gap: 8px;
       align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      border-radius: 8px;
-      background: rgba(15, 23, 42, 0.9);
-      color: #cbd5e1;
-      font-size: 12px;
-      backdrop-filter: blur(10px);
+      min-width: 0;
+      color: #929ba8;
+      font-size: 11px;
     }
     .fallback a {
       flex: 0 0 auto;
-      color: #93c5fd;
+      min-height: 28px;
+      padding: 5px 9px;
+      border: 1px solid #353d48;
+      border-radius: 4px;
+      background: #15191f;
+      color: #dce1e7;
       font-weight: 700;
       text-decoration: none;
     }
@@ -60,75 +76,79 @@
       white-space: nowrap;
     }
     .live-status {
-      position: fixed;
-      inset: max(12px, env(safe-area-inset-top)) 12px auto auto;
-      z-index: 3;
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr);
-      gap: 2px 9px;
+      display: flex;
+      min-width: 0;
+      gap: 8px;
       align-items: center;
-      max-width: min(390px, calc(100vw - 24px));
-      padding: 9px 12px;
-      border: 1px solid rgba(251, 191, 36, 0.65);
-      border-radius: 8px;
-      background: rgba(15, 23, 42, 0.94);
-      color: #fbbf24;
-      font-size: 12px;
+      color: #f3b84b;
+      font-size: 11px;
       font-weight: 800;
-      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.28);
-      backdrop-filter: blur(10px);
       pointer-events: none;
     }
     .live-status.live {
-      border-color: rgba(74, 222, 128, 0.72);
-      color: #4ade80;
+      color: #2ed398;
     }
     .live-status.offline {
-      border-color: rgba(251, 113, 133, 0.8);
-      color: #fb7185;
+      color: #ff6b7d;
     }
     .live-status .dot {
       width: 9px;
       height: 9px;
       border-radius: 50%;
       background: currentColor;
-      box-shadow: 0 0 12px currentColor;
+      box-shadow: 0 0 9px currentColor;
     }
     .live-status .detail {
-      grid-column: 1 / -1;
-      color: #cbd5e1;
+      overflow: hidden;
+      color: #929ba8;
       font-size: 11px;
       font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     @media (max-width: 520px) {
-      .live-status {
-        inset: max(8px, env(safe-area-inset-top)) 8px auto 8px;
-        max-width: none;
+      .gateway-bar {
+        min-height: 58px;
+        align-items: flex-start;
+        gap: 8px;
+        padding-top: max(7px, env(safe-area-inset-top));
       }
-      .fallback { inset-inline: 8px; }
+      .live-status {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 2px 7px;
+      }
+      .live-status .detail {
+        grid-column: 1 / -1;
+        max-width: 65vw;
+      }
+      .fallback span { display: none; }
     }
   </style>
 </head>
 <body>
+  <div class="gateway-bar">
+    <div id="live-status" class="live-status checking" role="status" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span>
+      <span id="live-status-label">CHECKING &middot; &#25509;&#32154;&#30906;&#35469;&#20013;</span>
+      <span id="live-status-detail" class="detail">&#12522;&#12450;&#12523;&#12479;&#12452;&#12512;&#25509;&#32154;&#12434;&#30906;&#35469;&#12375;&#12390;&#12356;&#12414;&#12377;</span>
+    </div>
+    <div class="fallback">
+      <span>Updated 2026-07-21T07:36:37Z / GitHub miner + funding access</span>
+      <a href="https://usd-heel-schema-placement.trycloudflare.com/?public=github">Open</a>
+    </div>
+  </div>
   <iframe id="ctm-frame" class="frame" src="https://usd-heel-schema-placement.trycloudflare.com/?public=github" title="CTM Public Monitor"></iframe>
-  <div id="live-status" class="live-status checking" role="status" aria-live="polite">
-    <span class="dot" aria-hidden="true"></span>
-    <span id="live-status-label">CHECKING &middot; &#25509;&#32154;&#30906;&#35469;&#20013;</span>
-    <span id="live-status-detail" class="detail">&#12522;&#12450;&#12523;&#12479;&#12452;&#12512;&#25509;&#32154;&#12434;&#30906;&#35469;&#12375;&#12390;&#12356;&#12414;&#12377;</span>
-  </div>
-  <div class="fallback">
-    <span>Updated 2026-07-19T23:06:57Z / GitHub miner + funding access</span>
-    <a href="https://usd-heel-schema-placement.trycloudflare.com/?public=github">Open</a>
-  </div>
   <script>
     window.CTM_MONITOR = {
       dashboardUrl: "https://usd-heel-schema-placement.trycloudflare.com/?public=github",
       baseUrl: "https://usd-heel-schema-placement.trycloudflare.com",
-      generatedAt: "2026-07-19T23:06:57Z",
+      generatedAt: "2026-07-21T07:36:37Z",
       stableUrl: "https://expresspath.github.io/crypto/",
       authMode: "public-viewer+tokenless-funding",
       tabForwarding: "v1",
       realtimeIndicator: "v3",
+      gatewayUi: "terminal-v2",
       charsetMode: "ascii-utf8-nobom-v1"
     };
     const params = new URLSearchParams(window.location.search);
