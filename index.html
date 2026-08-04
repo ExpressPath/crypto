@@ -9,12 +9,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="referrer" content="unsafe-url">
   <meta name="robots" content="noindex,nofollow">
-  <title>CTM Public Monitor</title>
+  <title>CTM SOL / USDC Terminal</title>
   <style>
     :root {
       color-scheme: dark;
-      background: #080a0d;
-      color: #f3f5f7;
+      background: #080a0c;
+      color: #f2f5f7;
       font-family: "Segoe UI Variable", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     * { box-sizing: border-box; }
@@ -23,7 +23,7 @@
       height: 100%;
       margin: 0;
       overflow: hidden;
-      background: #080a0d;
+      background: #080a0c;
     }
     body {
       display: grid;
@@ -33,15 +33,14 @@
       position: relative;
       z-index: 3;
       display: flex;
-      min-height: 42px;
+      min-height: 38px;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 7px max(12px, env(safe-area-inset-right)) 7px max(12px, env(safe-area-inset-left));
-      border-top: 2px solid #2ed398;
-      border-bottom: 1px solid #272d35;
-      background: #101318;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+      padding: 5px max(10px, env(safe-area-inset-right)) 5px max(10px, env(safe-area-inset-left));
+      border-bottom: 1px solid #252c32;
+      background: #0d1013;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
     }
     .frame {
       width: 100%;
@@ -49,24 +48,24 @@
       min-height: 0;
       border: 0;
       display: block;
-      background: #080a0d;
+      background: #080a0c;
     }
     .fallback {
       display: flex;
       gap: 8px;
       align-items: center;
       min-width: 0;
-      color: #929ba8;
-      font-size: 11px;
+      color: #8d98a3;
+      font-size: 10px;
     }
     .fallback a {
       flex: 0 0 auto;
-      min-height: 28px;
-      padding: 5px 9px;
-      border: 1px solid #353d48;
+      min-height: 27px;
+      padding: 4px 9px;
+      border: 1px solid #343e47;
       border-radius: 4px;
-      background: #15191f;
-      color: #dce1e7;
+      background: #171c21;
+      color: #d7dde2;
       font-weight: 700;
       text-decoration: none;
     }
@@ -80,47 +79,44 @@
       min-width: 0;
       gap: 8px;
       align-items: center;
-      color: #f3b84b;
-      font-size: 11px;
+      color: #f2b84b;
+      font-size: 10px;
       font-weight: 800;
       pointer-events: none;
     }
     .live-status.live {
-      color: #2ed398;
+      color: #21c99a;
     }
     .live-status.offline {
-      color: #ff6b7d;
+      color: #ff697d;
     }
     .live-status .dot {
       width: 9px;
       height: 9px;
       border-radius: 50%;
       background: currentColor;
-      box-shadow: 0 0 9px currentColor;
+      box-shadow: 0 0 8px currentColor;
     }
     .live-status .detail {
       overflow: hidden;
-      color: #929ba8;
-      font-size: 11px;
+      color: #8d98a3;
+      font-size: 10px;
       font-weight: 600;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
     @media (max-width: 520px) {
       .gateway-bar {
-        min-height: 58px;
-        align-items: flex-start;
-        gap: 8px;
-        padding-top: max(7px, env(safe-area-inset-top));
+        min-height: calc(46px + env(safe-area-inset-top));
+        align-items: center;
+        gap: 6px;
+        padding-top: env(safe-area-inset-top);
       }
       .live-status {
-        display: grid;
-        grid-template-columns: auto minmax(0, 1fr);
-        gap: 2px 7px;
+        gap: 6px;
       }
       .live-status .detail {
-        grid-column: 1 / -1;
-        max-width: 65vw;
+        display: none;
       }
       .fallback span { display: none; }
     }
@@ -131,10 +127,10 @@
     <div id="live-status" class="live-status checking" role="status" aria-live="polite">
       <span class="dot" aria-hidden="true"></span>
       <span id="live-status-label">CHECKING &middot; &#25509;&#32154;&#30906;&#35469;&#20013;</span>
-      <span id="live-status-detail" class="detail">&#12522;&#12450;&#12523;&#12479;&#12452;&#12512;&#25509;&#32154;&#12434;&#30906;&#35469;&#12375;&#12390;&#12356;&#12414;&#12377;</span>
+      <span id="live-status-detail" class="detail">SOL / USDC terminal connection</span>
     </div>
     <div class="fallback">
-      <span>Updated 2026-08-02T04:17:32Z / PPO live + continuous learning monitor</span>
+      <span>Updated 2026-08-04T06:47:48Z / adaptive trading terminal</span>
       <a href="https://potatoes-remedies-respective-colorado.trycloudflare.com/?public=github">Open</a>
     </div>
   </div>
@@ -143,14 +139,14 @@
     window.CTM_MONITOR = {
       dashboardUrl: "https://potatoes-remedies-respective-colorado.trycloudflare.com/?public=github",
       baseUrl: "https://potatoes-remedies-respective-colorado.trycloudflare.com",
-      generatedAt: "2026-08-02T04:17:32Z",
+      generatedAt: "2026-08-04T06:47:48Z",
       stableUrl: "https://expresspath.github.io/crypto/",
       authMode: "public-viewer+tokenless-funding",
       tabForwarding: "v1",
       realtimeIndicator: "v3",
-      gatewayUi: "terminal-v2",
-      ppoUi: "continuous-v1",
-      scriptRevision: "09f01c8bc3d5",
+      gatewayUi: "adaptive-terminal-v1",
+      ppoUi: "continuous-v2",
+      scriptRevision: "3d68ed4c371f",
       charsetMode: "ascii-utf8-nobom-v1"
     };
     const params = new URLSearchParams(window.location.search);
@@ -183,18 +179,17 @@
       liveStatus.classList.remove("checking");
       if (operational) {
         const target = Number(ppo.targetBaseSharePct);
-        liveStatusLabel.textContent = "PPO LIVE \u00B7 \u5B9F\u904B\u7528";
+        liveStatusLabel.textContent = "BOT LIVE \u00B7 \u5B9F\u904B\u7528";
         liveStatusDetail.textContent =
-          "\u6C38\u7D9A\u5831\u916C\u5B66\u7FD2 \u00B7 " +
-          Number(ppo.activeModelCount || 0) + "\u30E2\u30C7\u30EB" +
+          (ppo.forecastModelVersion || (Number(ppo.activeModelCount || 0) + " models")) +
           (Number.isFinite(target) ? " \u00B7 SOL\u76EE\u6A19 " + target.toFixed(3) + "%" : "") +
           " \u00B7 \u78BA\u8A8D " + healthClock();
       } else if (connected) {
         liveStatusLabel.textContent = health.botRunning
-          ? "PPO HOLD \u00B7 \u884C\u52D5\u66F4\u65B0\u5F85\u3061"
+          ? "BOT HOLD \u00B7 \u884C\u52D5\u66F4\u65B0\u5F85\u3061"
           : "BOT STOPPED";
         liveStatusDetail.textContent =
-          "GitHub\u30E2\u30CB\u30BF\u30FC\u63A5\u7D9A\u4E2D \u00B7 V1\u6559\u5E2B\u9000\u5F79 \u00B7 \u78BA\u8A8D " +
+          "GitHub\u30E2\u30CB\u30BF\u30FC\u63A5\u7D9A\u4E2D \u00B7 \u78BA\u8A8D " +
           healthClock();
       } else {
         liveStatusLabel.textContent = "NOT LIVE \u00B7 \u30EA\u30A2\u30EB\u30BF\u30A4\u30E0\u60C5\u5831\u3067\u306F\u3042\u308A\u307E\u305B\u3093";
