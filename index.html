@@ -130,7 +130,7 @@
       <span id="live-status-detail" class="detail">SOL / USDC terminal connection</span>
     </div>
     <div class="fallback">
-      <span>Updated 2026-08-14T05:43:30Z / adaptive trading terminal</span>
+      <span>Updated 2026-08-14T06:15:23Z / adaptive trading terminal</span>
       <a href="https://shoot-cafe-compact-reduced.trycloudflare.com/?public=github">Open</a>
     </div>
   </div>
@@ -139,14 +139,14 @@
     window.CTM_MONITOR = {
       dashboardUrl: "https://shoot-cafe-compact-reduced.trycloudflare.com/?public=github",
       baseUrl: "https://shoot-cafe-compact-reduced.trycloudflare.com",
-      generatedAt: "2026-08-14T05:43:30Z",
+      generatedAt: "2026-08-14T06:15:23Z",
       stableUrl: "https://expresspath.github.io/crypto/",
       authMode: "public-viewer+tokenless-funding",
       tabForwarding: "v1",
       realtimeIndicator: "v3",
       gatewayUi: "adaptive-terminal-v1",
       ppoUi: "continuous-v2",
-      scriptRevision: "589f5783dd44",
+      scriptRevision: "45937525a515",
       charsetMode: "ascii-utf8-nobom-v1"
     };
     const params = new URLSearchParams(window.location.search);
@@ -157,6 +157,7 @@
       : params.get("miner") === "1"
         ? "options"
         : params.get("tab") || window.location.hash.slice(1);
+    const optionsView = requestedTab === "options" || requestedTab === "miner";
     if (["options", "miner", "funding"].includes(requestedTab)) {
       const normalizedTab = requestedTab === "miner" ? "options" : requestedTab;
       const targetUrl = window.CTM_MONITOR.dashboardUrl + "#" + normalizedTab;
@@ -174,6 +175,24 @@
     }
 
     function showRealtimeState(health) {
+      if (optionsView) {
+        const reachable = Boolean(health && health.venue === "Derive" && health.mode === "SHADOW");
+        const healthy = reachable && Boolean(health.healthy);
+        const assets = reachable && health.assets ? health.assets : {};
+        const healthyCollectors = [assets.BTC, assets.ETH].filter((asset) => asset && asset.healthy).length;
+        liveStatus.classList.toggle("live", healthy);
+        liveStatus.classList.toggle("offline", !reachable);
+        liveStatus.classList.remove("checking");
+        liveStatusLabel.textContent = healthy
+          ? "DERIVE OPTIONS \u00B7 SHADOW LIVE"
+          : reachable
+            ? "DERIVE OPTIONS \u00B7 SHADOW DEGRADED"
+            : "OPTIONS NOT LIVE";
+        liveStatusDetail.textContent = reachable
+          ? healthyCollectors + "/2 collectors \u00B7 \u53D6\u5F15\u9001\u4FE1 OFF \u00B7 \u78BA\u8A8D " + healthClock()
+          : "Option Trade telemetry unavailable \u00B7 \u78BA\u8A8D " + healthClock();
+        return;
+      }
       const connected = Boolean(health && health.ok && health.realtime);
       const ppo = health && health.ppo ? health.ppo : {};
       const operational = connected && Boolean(health.botRunning && ppo.actionFresh);
@@ -206,8 +225,9 @@
         const controller = new AbortController();
         const timeout = window.setTimeout(() => controller.abort(), 8000);
         try {
+          const statusPath = optionsView ? "/api/options/status?public=github&_r=" : "/api/health?_r=";
           const response = await fetch(
-            window.CTM_MONITOR.baseUrl + "/api/health?_r=" + Date.now(),
+            window.CTM_MONITOR.baseUrl + statusPath + Date.now(),
             { cache: "no-store", mode: "cors", signal: controller.signal }
           );
           const health = response.ok ? await response.json() : null;
