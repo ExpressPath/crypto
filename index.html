@@ -130,7 +130,7 @@
       <span id="live-status-detail" class="detail">SOL / USDC terminal connection</span>
     </div>
     <div class="fallback">
-      <span>Updated 2026-08-12T15:32:38Z / adaptive trading terminal</span>
+      <span>Updated 2026-08-14T05:43:30Z / adaptive trading terminal</span>
       <a href="https://shoot-cafe-compact-reduced.trycloudflare.com/?public=github">Open</a>
     </div>
   </div>
@@ -139,24 +139,27 @@
     window.CTM_MONITOR = {
       dashboardUrl: "https://shoot-cafe-compact-reduced.trycloudflare.com/?public=github",
       baseUrl: "https://shoot-cafe-compact-reduced.trycloudflare.com",
-      generatedAt: "2026-08-12T15:32:38Z",
+      generatedAt: "2026-08-14T05:43:30Z",
       stableUrl: "https://expresspath.github.io/crypto/",
       authMode: "public-viewer+tokenless-funding",
       tabForwarding: "v1",
       realtimeIndicator: "v3",
       gatewayUi: "adaptive-terminal-v1",
       ppoUi: "continuous-v2",
-      scriptRevision: "3d68ed4c371f",
+      scriptRevision: "589f5783dd44",
       charsetMode: "ascii-utf8-nobom-v1"
     };
     const params = new URLSearchParams(window.location.search);
     const requestedTab = params.get("funding") === "1"
       ? "funding"
+      : params.get("options") === "1"
+        ? "options"
       : params.get("miner") === "1"
-        ? "miner"
+        ? "options"
         : params.get("tab") || window.location.hash.slice(1);
-    if (["miner", "funding"].includes(requestedTab)) {
-      const targetUrl = window.CTM_MONITOR.dashboardUrl + "#" + requestedTab;
+    if (["options", "miner", "funding"].includes(requestedTab)) {
+      const normalizedTab = requestedTab === "miner" ? "options" : requestedTab;
+      const targetUrl = window.CTM_MONITOR.dashboardUrl + "#" + normalizedTab;
       document.querySelector("#ctm-frame").src = targetUrl;
       document.querySelector(".fallback a").href = targetUrl;
     }
