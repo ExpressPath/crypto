@@ -9,8 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="referrer" content="unsafe-url">
   <meta name="robots" content="noindex,nofollow">
-  <link rel="alternate" type="application/json" title="CTM public monitor status" href="status.json?_r=2026-11-02T13%3A43%3A35Z">
-  <title>CTM SOL / USDC Terminal</title>
+  <link rel="alternate" type="application/json" title="CTM public monitor status" href="status.json?_r=2026-11-02T13%3A57%3A53Z">
+  <title>CTM USDC / USDT Monitor</title>
   <style>
     :root {
       color-scheme: dark;
@@ -128,20 +128,20 @@
     <div id="live-status" class="live-status checking" role="status" aria-live="polite">
       <span class="dot" aria-hidden="true"></span>
       <span id="live-status-label">CHECKING &middot; &#25509;&#32154;&#30906;&#35469;&#20013;</span>
-      <span id="live-status-detail" class="detail">SOL / USDC terminal connection</span>
+      <span id="live-status-detail" class="detail">USDC / USDT relative-value trading</span>
     </div>
     <div class="fallback">
-      <span>Updated 2026-11-02T13:43:35Z / adaptive trading terminal</span>
+      <span>Updated 2026-11-02T13:57:53Z / adaptive trading terminal</span>
       <a href="https://coastal-distributed-deals-records.trycloudflare.com/?public=github">Open</a>
-      <a href="status.json?_r=2026-11-02T13%3A43%3A35Z">JSON</a>
+      <a href="status.json?_r=2026-11-02T13%3A57%3A53Z">JSON</a>
     </div>
   </div>
-  <iframe id="ctm-frame" class="frame" src="https://coastal-distributed-deals-records.trycloudflare.com/?public=github" title="CTM Public Monitor"></iframe>
+  <iframe id="ctm-frame" class="frame" src="https://coastal-distributed-deals-records.trycloudflare.com/?public=github" title="CTM USDC / USDT Monitor"></iframe>
   <script>
     window.CTM_MONITOR = {
       dashboardUrl: "https://coastal-distributed-deals-records.trycloudflare.com/?public=github",
       baseUrl: "https://coastal-distributed-deals-records.trycloudflare.com",
-      generatedAt: "2026-11-02T13:43:35Z",
+      generatedAt: "2026-11-02T13:57:53Z",
       stableUrl: "https://expresspath.github.io/crypto/",
       authMode: "public-viewer+tokenless-funding",
       tabForwarding: "v1",
@@ -150,9 +150,9 @@
       optionsRouting: "eager-hash-v1",
     ppoUi: "continuous-v2",
     publicStatus: "v1",
-    publicStatusPath: "status.json?_r=2026-11-02T13%3A43%3A35Z",
+    publicStatusPath: "status.json?_r=2026-11-02T13%3A57%3A53Z",
     staticSnapshotFallback: "v1",
-    scriptRevision: "24b81fba9ce9",
+    scriptRevision: "859d20f38c2d",
       charsetMode: "ascii-utf8-nobom-v1"
     };
     const params = new URLSearchParams(window.location.search);
@@ -200,6 +200,15 @@
         return;
       }
       const connected = Boolean(health && health.ok && health.realtime);
+      if (connected && health.strategyMode === "usdc-usdt") {
+        const operational = Boolean(health.botRunning && health.liveAuthorized);
+        liveStatus.classList.toggle("live", operational);
+        liveStatus.classList.toggle("offline", !connected);
+        liveStatus.classList.remove("checking");
+        liveStatusLabel.textContent = operational ? "USDC / USDT BOT LIVE" : health.botRunning ? "USDC / USDT HOLD" : "BOT STOPPED";
+        liveStatusDetail.textContent = "Relative-value runner ﾂｷ " + healthClock();
+        return;
+      }
       const ppo = health && health.ppo ? health.ppo : {};
       const operational = connected && Boolean(health.botRunning && ppo.actionFresh);
       liveStatus.classList.toggle("live", operational);
@@ -230,10 +239,9 @@
       const quality = runtime.dataQuality ? runtime.dataQuality : {};
       const healthy = Boolean(
         runtime.botRunning &&
-        runtime.actionFresh &&
-        quality.spotFresh &&
-        quality.quoteFresh &&
-        quality.quoteConsistent
+        (snapshot.market && snapshot.market.pair === "USDC/USDT"
+          ? runtime.liveAuthorized
+          : runtime.actionFresh && quality.spotFresh && quality.quoteFresh && quality.quoteConsistent)
       );
       const asOf = snapshot && snapshot.asOf
         ? new Date(snapshot.asOf).toLocaleTimeString("ja-JP", { hour12: false })
@@ -257,7 +265,7 @@
         );
         if (!response.ok) return null;
         const snapshot = await response.json();
-        return snapshot && snapshot.schemaVersion === "ctm-public-status/v1" ? snapshot : null;
+        return snapshot && ["ctm-public-status/v1", "ctm-public-status/usdc-usdt-v1"].includes(snapshot.schemaVersion) ? snapshot : null;
       } catch {
         return null;
       } finally {
